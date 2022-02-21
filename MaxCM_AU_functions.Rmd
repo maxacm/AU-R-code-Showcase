@@ -1,0 +1,254 @@
+---
+title: "American University DATA-613 Functions Homework"
+author: "Max Calzada Munoz, Grady Keene"
+date: "1/22/2022"
+output: word_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library(tidyverse)
+library(dplyr)
+
+
+# library(tidyverse)
+# library(nycflights13)
+# library(dplyr)
+```
+
+### 1) 
+
+Write a function that will find the sum of the natural log, the common log and a log of base 2 
+for any given positive number. Use your function to find answers for the first five even integers.  
+Show all details and structure of your function.  You should get five answers. The first two 
+answers are 1.994177 and 3.988354. (Your output should show the other three)
+
+```{r, message = FALSE}
+#First, I'm going to make a vector
+#that doubles the first five integers
+#so we get the first five EVEN integers.
+
+xi2 <- (1:5)*2
+
+#Second, I'm going to code the function.
+fx1 <- function(x) {
+  log(x) + log10(x) + log2(x)
+}
+
+
+#Third, I'm going to use
+#the vector in the function
+#and use the function in the loop.
+
+for (i in xi2) {
+  print(fx1(i))
+}
+```
+
+Method 2
+
+```{r, message = FALSE}
+#Altnerantively, I could mash all the steps into one step.
+for (i in (1:5)*2) {
+  print(log(i) + log10(i) + log2(i))
+}
+```
+
+Method 3
+
+```{r, message = FALSE}
+sumeven <- function(x) {
+  vector <- c()
+  for (i in 1:length(x)) {
+    if(x[i] %% 2 == 0) 
+      return(log10(x) + log(x) +log2(x))
+  }
+}
+
+sumeven(c(2, 4, 6, 8, 10))
+```
+
+### 2) 
+
+Use the if-else structure to print the statement "This is a big number" if the square of a value 
+is greater than or equal to 100 and the following statement is printed if the square of the 
+number is less than 100, "This is not a big number”. Use and show values of assignment and if-
+else structures that will output both statements.
+
+```{r, message = FALSE}
+checkBig <- function(x) {
+  if (x^2 >= 100) {
+    result <- "This is a big number"
+  }
+  else {
+    result <- "This is not a big number"
+  }
+  return(result)
+}
+
+checkBig(5)
+checkBig(14000605)
+```
+
+### 3)
+
+For the following if-else-if coding structure, make an adjustment so that it prints "Team A 
+won"
+
+team_A <- 2 # Number of goals scored by Team A
+team_B <- 2 # Number of goals scored by Team B
+
+if (team_A > team_B){
+  print ("Team A won")
+} else if (team_A < team_B){
+  print ("Team B won")
+} else {
+  "Team A & B tied"
+}
+
+```{r, message = FALSE}
+team_A <- 3 # I made the 2 a 3
+team_B <- 2 # Number of goals scored by Team B
+
+if (team_A > team_B){
+  print ("Team A won")
+} else if (team_A < team_B){
+  print ("Team B won")
+} else {
+  "Team A & B tied"
+}
+```
+
+### 4) 
+
+Write an if- else if- else sequence of commands that will output the following
+statements and appropriate output; If a value is divisible by 3 and 5 the output
+statement is "divisible by Three and Five", If a value is divisible by 3 and 4, 
+the output statement is "divisible by Three and Four, If a value is a number that
+does not fall into either category, the output statement should be  "neither".
+Use your function to show output statements for values 16, 45, and 24.
+
+```{r, message = FALSE}
+divfunc <- function(x) {
+  if (x %% 3 == 0 & x %% 5 == 0){
+  print ("divisible by Three and Five")
+} else if (x %% 3 == 0 & x %% 4 == 0){
+  print ("divisible by Three and Four")
+} else {
+  "neither"
+}
+}
+
+divfunc(16)
+divfunc(45)
+divfunc(24)
+
+```
+
+Alternate Method
+
+```{r, message = FALSE}
+check15and12 <- function(x) {
+  if (x %% 15 == 0) {
+    result <- "divisible by Three and Five"
+  }
+  else if (x %% 12 == 0) {
+    result <- "divisible by Three and Four"
+  }
+  else {
+    result <- "neither"
+  }
+  return(result)
+}
+
+check15and12(16)
+check15and12(45)
+check15and12(24)
+```
+
+### 5)
+
+Use piping and a dplyr command show and use R code to produce the following modified 
+`mpg` data table that contains only quantitative variables. 
+
+Now use the “special loop coding chunk”, illustrated in class, to produce the variance for all 
+variables of the modified data table.
+
+```{r, message = FALSE}
+mpgQuant <- mpg %>%
+  select(displ, cyl, cty, hwy)
+
+mpgQuant
+```
+
+```{r, message = FALSE}
+mpgQvar <- vector("double", ncol(mpgQuant))
+ for (i in seq_along(mpgQuant)) {
+   mpgQvar[[i]] <- var(mpgQuant[[i]])
+ }
+
+ mpgQvar
+```
+
+Alternate Method
+
+```{r, message = FALSE}
+mpg %>%
+  select_if(is.numeric) %>%
+  select(!year) -> mpg2
+
+mpg2
+  
+```
+
+```{r, message = FALSE}
+ var_func <- vector("double", ncol(mpg2))  
+ for (i in seq_along(mpg2)) {            
+   var_func[[i]] <- var(mpg2[[i]])      
+ }
+ var_func
+```
+
+### 6)
+
+Construct a for loop (as illustrated in the notes) that will produce the difference between the 
+cube and the square for each prime number between 10 and 30.  (There are 6 answers. The 
+first answer is 1210, your for loop coding should produce the other five answers)
+
+```{r, message = FALSE}
+#First, produce produce prime numbers between 10 and 30
+
+#The following function is from stack overflow
+#https://stackoverflow.com/questions/3789968/generate-a-list-of-primes-up-to-a-certain-number
+
+allPrime <- function(n) {
+  primes <- rep(TRUE, n)
+  primes[1] <- FALSE
+  for (i in 1:sqrt(n)) {
+    if (primes[i]) primes[seq(i^2, n, i)] <- FALSE
+  }
+  which(primes)
+}
+
+allPrime(30) -> p30
+allPrime(10) -> p10
+
+p10to30 <- setdiff(p30,p10) # observations in p30 that are not in p10
+```
+
+```{r, message = FALSE}
+#Second, I'm going to build the function.
+
+fx6 <- function(x) {
+  x^3 - x^2
+}
+```
+
+```{r, message = FALSE}
+#Third, I'm going to use the function in the loop.
+
+for (i in p10to30) {
+  print(fx6(i))
+}
+```
